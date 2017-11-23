@@ -2,6 +2,7 @@ from django import forms
 from django.template.loader import get_template
 from django import template
 from django_filters.widgets import RangeWidget
+from ...dashboard.order.filters import DateRangeWidget
 
 register = template.Library()
 
@@ -88,3 +89,8 @@ def is_checkbox_select_multiple(field):
 @register.filter
 def is_range(field):
     return isinstance(field.field.widget, RangeWidget)
+
+
+@register.filter
+def is_date_range(field):
+    return isinstance(field.field.widget, DateRangeWidget)
