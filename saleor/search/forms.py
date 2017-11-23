@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import pgettext
-from .backends import elasticsearch
+from .backends import picker
 
 
 class SearchForm(forms.Form):
@@ -8,4 +8,5 @@ class SearchForm(forms.Form):
         label=pgettext('Search form label', 'Query'), required=True)
 
     def search(self):
-        return elasticsearch.search(self.cleaned_data['q'])
+        search = picker.pick_backend()
+        return search(self.cleaned_data['q'])
