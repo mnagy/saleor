@@ -80,22 +80,24 @@ def margins_for_variant(variant):
 def add_filters(context, filter_set):
     chips = []
     data = filter_set.form.cleaned_data
+    request_get = context['request']
     for key in data.keys():
         if key == 'sort_by':
             continue
         field = filter_set.form[key]
         if field.value() not in ['', None]:
             if isinstance(field.field, NullBooleanField):
-                chips = handle_nullboolean(field, chips)
+                chips = handle_nullboolean(request_get, field, chips)
             elif isinstance(field.field, ModelMultipleChoiceField):
                 field_data = {str(o.pk): str(o) for o in data[key]}
-                chips = handle_multiplechoice(field, chips, field_data)
+                chips = handle_multiplechoice(request_get, field, chips,
+                                              field_data)
             elif isinstance(field.field, RangeField):
-                chips = handle_range(field, chips)
+                chips = handle_range(request_get, field, chips)
             elif isinstance(field.field, ChoiceField):
-                chips = handle_choice(field, chips)
+                chips = handle_choice(request_get, field, chips)
             else:
-                chips = handle_default(field, chips)
+                chips = handle_default(request_get, field, chips)
     filter_context = {
         'chips': chips,
         'filter': filter_set,
